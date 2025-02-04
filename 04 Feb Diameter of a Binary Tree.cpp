@@ -1,19 +1,14 @@
-struct Pair {
-    int h, d; // h: height, d: diameter
+class Solution {
+  public:
+    int dfs(Node* n, int &d) {
+        if (!n) return 0;                      // Base case: empty node has height 0
+        int l = dfs(n->left, d), r = dfs(n->right, d);
+        d = max(d, l + r);                       // Update diameter if path through n is larger
+        return 1 + max(l, r);                    // Return height of current node
+    }
+    int diameter(Node* root) {
+        int d = 0;
+        dfs(root, d);
+        return d;                              // Final diameter
+    }
 };
-
-struct Pair f(struct Node* r) {
-    struct Pair p = {0, 0};         // Base case: empty node returns {0,0}
-    if (!r) return p;
-    // Recursively compute left and right subtree results
-    struct Pair a = f(r->left), b = f(r->right);
-    p.h = 1 + (a.h > b.h ? a.h : b.h);  // Height is max of left/right + 1
-    int m = a.d > b.d ? a.d : b.d;        // m: max diameter from children
-    int s = a.h + b.h;                    // s: diameter passing through current node
-    p.d = m > s ? m : s;                  // Maximum diameter so far
-    return p;
-}
-
-int diameter(struct Node* root) {
-    return f(root).d;                   // Return computed diameter
-}
